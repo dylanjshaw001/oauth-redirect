@@ -33,9 +33,9 @@
 
                 // Update the text based on the response
                 if (data.message === 'Tokens saved successfully') {
-                    statusMessageElement.textContent = "It worked!";
+                    statusMessageElement.textContent = "Nice! You've successfully shared your ad account with Symbiosys. :)";
                 } else {
-                    statusMessageElement.textContent = "It did not work :(";
+                    statusMessageElement.textContent = "Uh oh! Authorization failed. Please reach out to your Symbiosys Sales Engineer. :(";
                 }
             })
             .catch(error => {
