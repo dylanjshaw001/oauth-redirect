@@ -4,7 +4,7 @@
     <title>OAuth Redirect</title>
 </head>
 <body>
-    <p>Processing your authorization...</p>
+    <p id="status-message">Processing your authorization...</p>
     <script>
         // Function to parse the query parameters from the URL
         function getQueryParam(param) {
@@ -14,6 +14,7 @@
 
         // Extract the authorization code from the URL
         const authCode = getQueryParam('code');
+        const statusMessageElement = document.getElementById('status-message');
 
         if (authCode) {
             console.log('Authorization Code:', authCode);
@@ -30,19 +31,20 @@
             .then(data => {
                 console.log('Backend Response:', data);
 
+                // Update the text based on the response
                 if (data.message === 'Tokens saved successfully') {
-                    alert('Authorization successful!');
+                    statusMessageElement.textContent = "It worked!";
                 } else {
-                    alert('Something went wrong. Please try again.');
+                    statusMessageElement.textContent = "It did not work :(";
                 }
             })
             .catch(error => {
                 console.error('Error sending code to backend:', error);
-                alert('Failed to process authorization. Please try again.');
+                statusMessageElement.textContent = "It did not work :(";
             });
         } else {
             console.error('Authorization code not found in URL.');
-            alert('Authorization failed. No code was provided.');
+            statusMessageElement.textContent = "It did not work :(";
         }
     </script>
 </body>
