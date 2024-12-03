@@ -4,6 +4,46 @@
     <title>OAuth Redirect</title>
 </head>
 <body>
-    <p>Authorization successful! Check the URL for your authorization code.</p>
+    <p>Processing your authorization...</p>
+    <script>
+        // Function to parse the query parameters from the URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Extract the authorization code from the URL
+        const authCode = getQueryParam('code');
+
+        if (authCode) {
+            console.log('Authorization Code:', authCode);
+
+            // Send the code to your backend
+            fetch('http://localhost:3000/exchange-code', { // Replace with your backend's URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: authCode }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Backend Response:', data);
+
+                if (data.message === 'Tokens saved successfully') {
+                    alert('Authorization successful!');
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending code to backend:', error);
+                alert('Failed to process authorization. Please try again.');
+            });
+        } else {
+            console.error('Authorization code not found in URL.');
+            alert('Authorization failed. No code was provided.');
+        }
+    </script>
 </body>
 </html>
