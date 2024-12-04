@@ -20,31 +20,35 @@
             console.log('Authorization Code:', authCode);
 
             // Send the code to your backend
-            fetch('http://localhost:3000/exchange-code', { // Replace with your backend's URL
+            fetch('http://localhost:3000/oauth/exchange-code', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ code: authCode }),
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send authorization code to backend');
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('Backend Response:', data);
 
-                // Update the text based on the response
-                if (data.message === 'Tokens saved successfully') {
-                    statusMessageElement.textContent = "Nice! You've successfully shared your ad account with Symbiosys. :)";
-                } else {
-                    statusMessageElement.textContent = "Uh oh! Authorization failed. Please reach out to your Symbiosys Sales Engineer. :(";
-                }
+                // Update the status message
+                statusMessageElement.textContent = 
+                    data.message === 'Tokens saved successfully'
+                    ? "Nice! You've successfully shared your ad account with Symbiosys. :)"
+                    : "Uh oh! Authorization failed. Please reach out to your Symbiosys Sales Engineer. :(";
             })
             .catch(error => {
                 console.error('Error sending code to backend:', error);
-                statusMessageElement.textContent = "It did not work :(";
+                statusMessageElement.textContent = "Uh oh! Authorization failed. Please reach out to your Symbiosys Sales Engineer. :(";
             });
         } else {
             console.error('Authorization code not found in URL.');
-            statusMessageElement.textContent = "It did not work :(";
+            statusMessageElement.textContent = "Uh oh! Authorization failed. Please reach out to your Symbiosys Sales Engineer. :(";
         }
     </script>
 </body>
